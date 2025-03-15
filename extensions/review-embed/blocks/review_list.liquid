@@ -1,0 +1,130 @@
+{% assign product_id = product.id | prepend: 'gid://shopify/Product/' | url_encode %}
+
+<div class="product-reviews-list">
+  <h2>Customer Reviews</h2>
+
+  <div class="reviews-container" id="reviews-container">
+    <div class="loading">Loading reviews...</div>
+  </div>
+</div>
+
+<script>
+  // Fetch reviews when the page loads
+  document.addEventListener('DOMContentLoaded', function() {
+    const reviewsContainer = document.getElementById('reviews-container');
+    const productId = '{{ product_id }}';
+
+    console.log('Fetching reviews from URL:', '{{ routes.root_url }}apps/reviewer-9000/reviews/' + productId);
+    console.log('Product ID:', productId);
+
+      fetch('{{ routes.root_url }}apps/reviewer-9000/reviews/' + productId)
+      .then(response => response.json())
+      .then(data => {
+        if (data.reviews && data.reviews.length > 0) {
+          reviewsContainer.innerHTML = '';
+
+          // Add average rating display
+          const avgRating = data.averageRating || 0;
+          const ratingEl = document.createElement('div');
+          ratingEl.className = 'average-rating';
+          ratingEl.innerHTML = `
+            <div class="rating-stars">
+              ${'★'.repeat(Math.floor(avgRating))}${'☆'.repeat(5 - Math.floor(avgRating))}
+            </div>
+            <div class="rating-text">${avgRating.toFixed(1)} out of 5 stars (${data.reviews.length} reviews)</div>
+          `;
+          reviewsContainer.appendChild(ratingEl);
+
+          // Add individual reviews
+          data.reviews.forEach(review => {
+            const reviewEl = document.createElement('div');
+            reviewEl.className = 'review-item';
+            reviewEl.innerHTML = `
+              <div class="review-stars">${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</div>
+              <div class="review-message">${review.message}</div>
+              <div class="review-date">Posted on ${new Date(review.createdAt).toLocaleDateString()}</div>
+            `;
+            reviewsContainer.appendChild(reviewEl);
+          });
+        } else {
+          reviewsContainer.innerHTML = '<div class="no-reviews">No reviews yet. Be the first to review this product!</div>';
+        }
+      })
+      .catch(error => {
+        reviewsContainer.innerHTML = '<div class="error">Error loading reviews. Please try again later.</div>';
+        console.error('Error fetching reviews:', error);
+      });
+  });
+</script>
+
+<style>
+  .product-reviews-list {
+    margin: 30px 0;
+  }
+
+  .average-rating {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+  }
+
+  .rating-stars {
+    font-size: 24px;
+    color: #FFD700;
+    margin-bottom: 5px;
+  }
+
+  .review-item {
+    padding: 15px;
+    border-bottom: 1px solid #e5e5e5;
+  }
+
+  .review-stars {
+    color: #FFD700;
+    margin-bottom: 10px;
+  }
+
+  .review-message {
+    margin-bottom: 5px;
+  }
+
+  .review-date {
+    font-size: 0.9em;
+    color: #666;
+  }
+
+  .loading, .no-reviews, .error {
+    padding: 20px;
+    text-align: center;
+  }
+
+  .error {
+    color: red;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Product Reviews List",
+  "target": "section",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Reviews Display Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_reviews",
+      "label": "Show reviews",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

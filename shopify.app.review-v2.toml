@@ -1,0 +1,41 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "fec3c48a88103e4722e3cbaf5da5d043"
+application_url = "https://amd-gaming-snowboard-angel.trycloudflare.com"
+embedded = true
+name = "review-v2"
+handle = "review-v2-3"
+
+[build]
+include_config_on_deploy = true
+automatically_update_urls_on_dev = true
+
+[webhooks]
+api_version = "2025-01"
+
+  [[webhooks.subscriptions]]
+  topics = [ "app/uninstalled" ]
+  uri = "/webhooks/app/uninstalled"
+
+  [[webhooks.subscriptions]]
+  topics = [ "app/scopes_update" ]
+  uri = "/webhooks/app/scopes_update"
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "read_customer_events,read_customers,read_metaobject_definitions,read_metaobjects,read_products,write_customers,write_metaobject_definitions,write_metaobjects,write_products"
+
+[auth]
+redirect_urls = [
+  "https://amd-gaming-snowboard-angel.trycloudflare.com/auth/callback",
+  "https://amd-gaming-snowboard-angel.trycloudflare.com/auth/shopify/callback",
+  "https://amd-gaming-snowboard-angel.trycloudflare.com/api/auth/callback"
+]
+
+[app_proxy]
+url = "https://amd-gaming-snowboard-angel.trycloudflare.com/api/public"
+subpath = "reviewer-9000"
+prefix = "apps"
+
+[pos]
+embedded = false

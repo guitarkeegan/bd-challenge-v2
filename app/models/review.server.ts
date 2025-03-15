@@ -1,8 +1,47 @@
+import { dbg } from "app/utils/dbg";
 import prisma from "../db.server";
 import { ReviewNotFoundError, UnauthorizedReviewError } from "./errors";
 
+export async function getPendingReviews() {
+  dbg("getPendingReviews")
+  return prisma.review.findMany({
+    where: { approved: false },
+    orderBy: { createdAt: "desc" },
+  });
+}
+
+export async function getReviewStats() {
+  dbg("getReviewStats");
+  const pendingCount = await prisma.review.count({
+    where: { approved: false },
+  });
+
+  const totalCount = await prisma.review.count();
+
+  dbg("  totalCount:", totalCount);
+  // Calculate average rating
+  const ratingSum = await prisma.review.aggregate({
+    _sum: { rating: true },
+  });
+
+  dbg("  ratingSum:", ratingSum);
+
+  const averageRating = totalCount > 0
+    ? (ratingSum._sum.rating || 0) / totalCount
+    : 0;
+
+  dbg("  averageRating:", averageRating);
+  dbg("end");
+  return {
+    pendingCount,
+    totalCount,
+    averageRating,
+  };
+}
 // TODO: find type
 export async function getProductsWithReviews(graphql: any) {
+
+  dbg("getProductsWithReviews");
 
   // TODO: limit and paginate in the future
   const reviewedProducts = await prisma.review.findMany({
@@ -12,10 +51,14 @@ export async function getProductsWithReviews(graphql: any) {
 
   const productIds = reviewedProducts.map((p) => p.productId);
 
+  dbg("  productIds:", productIds);
+
   if (productIds.length === 0) return [];
 
+  // Maybe validate id formats here?
+
   // TODO: find type
-  const response = await graphql.query({
+  const response = await graphql({
     data: {
       query: `#graphql
         query GetProducts($ids: [ID!]!) {
@@ -34,11 +77,15 @@ export async function getProductsWithReviews(graphql: any) {
     },
   });
 
+  dbg("  response:", response);
+
+  dbg("end");
+
   return response.body.data.nodes;
 }
 
 // TODO: get type for client
-export async function getReviewsForProduct(shopifyClient: any, productId: string) {
+export async function getReviewsForProduct(graphql: any, productId: string) {
 
   // assuming bespoke shop
   const reviews = await prisma.review.findMany({
@@ -46,7 +93,7 @@ export async function getReviewsForProduct(shopifyClient: any, productId: string
     orderBy: { createdAt: "desc" },
   });
 
-  const response = await shopifyClient.query({
+  const response = await graphql.query({
     data: {
       query: `#graphql
         query GetProduct($id: ID!) {

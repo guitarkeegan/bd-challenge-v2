@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "03c65e832a482f2f5bc75e9f5a4d3056"
-application_url = "https://pam-beach-marking-heather.trycloudflare.com"
+application_url = "https://greensboro-tee-minimum-shirts.trycloudflare.com"
 embedded = true
 name = "reviews"
 handle = "reviews-126"
@@ -24,17 +24,17 @@ api_version = "2025-01"
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = ""
+scopes = "read_customer_events,read_customers,read_metaobject_definitions,read_metaobjects,write_customers,write_metaobject_definitions,write_metaobjects,write_products,read_products"
 
 [auth]
 redirect_urls = [
-  "https://pam-beach-marking-heather.trycloudflare.com/auth/callback",
-  "https://pam-beach-marking-heather.trycloudflare.com/auth/shopify/callback",
-  "https://pam-beach-marking-heather.trycloudflare.com/api/auth/callback"
+  "https://greensboro-tee-minimum-shirts.trycloudflare.com/auth/callback",
+  "https://greensboro-tee-minimum-shirts.trycloudflare.com/auth/shopify/callback",
+  "https://greensboro-tee-minimum-shirts.trycloudflare.com/api/auth/callback"
 ]
 
 [app_proxy]
-url = "https://pam-beach-marking-heather.trycloudflare.com/api/public"
+url = "https://greensboro-tee-minimum-shirts.trycloudflare.com/api/public"
 subpath = "reviewer-9000"
 prefix = "apps"
 
