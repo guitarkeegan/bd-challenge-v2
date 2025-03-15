@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "fec3c48a88103e4722e3cbaf5da5d043"
-application_url = "https://amd-gaming-snowboard-angel.trycloudflare.com"
+application_url = "https://bennett-tue-mv-pledge.trycloudflare.com"
 embedded = true
 name = "review-v2"
 handle = "review-v2-3"
@@ -27,13 +27,13 @@ scopes = "read_customer_events,read_customers,read_metaobject_definitions,read_m
 
 [auth]
 redirect_urls = [
-  "https://amd-gaming-snowboard-angel.trycloudflare.com/auth/callback",
-  "https://amd-gaming-snowboard-angel.trycloudflare.com/auth/shopify/callback",
-  "https://amd-gaming-snowboard-angel.trycloudflare.com/api/auth/callback"
+  "https://bennett-tue-mv-pledge.trycloudflare.com/auth/callback",
+  "https://bennett-tue-mv-pledge.trycloudflare.com/auth/shopify/callback",
+  "https://bennett-tue-mv-pledge.trycloudflare.com/api/auth/callback"
 ]
 
 [app_proxy]
-url = "https://amd-gaming-snowboard-angel.trycloudflare.com/api/public"
+url = "https://bennett-tue-mv-pledge.trycloudflare.com/api/public"
 subpath = "reviewer-9000"
 prefix = "apps"
 
